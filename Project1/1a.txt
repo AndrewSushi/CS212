@@ -1,0 +1,37 @@
+Hello, my name is Andrew Chan.
+I am a Computer Science student at UO.
+Over the summer I have been working on C and DSA in C.
+I learned all sorts of things over the summer such as,
+Basics of C, basics data structures such as linked lists, queues/stacks, and trees.
+I also learnt a few algorithms like bubble sort, binary search, and Q sort.
+But most importantly I learned how incompetent I am at computer science.
+This realization came recently and was a big wake up call to me.
+In my time here at UO I have usually been the top in the class averaging grades of >99%.
+Naturally I would have quite a big ego since it feels good to get good grades and get 
+recognized by those around you.
+However, a few weeks ago I got to talk with a relative's godfather who is a
+principal software engineer at Microsoft.
+It wasn't so much an interview but more so just a lead into the world of tech.
+Granted however, if I did manage to impress him, then that could lead to a pleasant
+future of potential internships and possibly job openings after I graduate.
+However, when we were talking I stuggled to find an actual reason why a single
+company would even be somewhat interested in me.
+Sure I got good grades, but grades were just a number and not something beyond
+ordinary that i can show off to people.
+To make matters even worse, when asked an interview esque question, I completely
+flopped and was stumbling all over the place and couldn't even complete it at all.
+It was probably the most embarrasing moment of my life, but even more so, it was
+the most depressing moment in my adulthood.
+Something that I have such a passion in and seemly what people tell me "natural talent"
+in, was so out of my reach that I couldn't even comprehend the issue.
+However, this led me change a completely new perspective on my carrer as a CS student,
+but more importantly a person in the workforce of CS.
+It made me realize that grades aren't the only thing that matters.
+I need to put actual time and dedication to a project that I have interest in and
+genuinely enjoy the act of coding and solving problems.
+A grade is nothing without the mind behind it growing. 
+So to answer the second bullet on this assignment, one thing I want to learn from this
+class is how to truly become greatest CS student that has ever set foot on this campus.
+I want to remove all other-worldly desires to walk the lonely road of true success.
+
+Andrew Chan
