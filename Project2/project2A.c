@@ -5,7 +5,7 @@ void odd_composites(int a, int b){
 		if(i % 2 == 0){
 			continue;
 		}
-		for(int j = 2; j<=i/2; j++){
+		for(int j = 2; j<=((i>>2)|5); j++){
 			if(i % j == 0){
 				printf("%d is a composite number.\n", i);
 				break;
