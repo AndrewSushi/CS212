@@ -1,0 +1,22 @@
+mkdir $1
+cd $1
+mkdir dir1
+mkdir dir2
+cd dir1
+mkdir dir3
+cd dir3
+mkdir dir4
+echo "Bye" > fileC
+chmod 500 dir4
+chmod 600 fileC
+cd ..
+echo "fileA!" > fileA
+chmod 000 dir3
+chmod 600 fileA
+cd ..
+chmod 700 dir1
+cd dir2
+echo "Hi" > fileB
+chmod 640 fileB
+cd ..
+chmod 755 dir2
