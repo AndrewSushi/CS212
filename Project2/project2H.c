@@ -43,29 +43,30 @@ int main()
 
     for (int i = 0 ; i < 11 ; i++)
     {
-		double alloc_time = 0., sort_time = 0., dealloc_time = 0.;
-        struct timeval startTime1;
-		gettimeofday(&startTime1, 0);
-		int *arr = AllocateArray(sizes[i]);
-        struct timeval endTime1;
-		gettimeofday(&endTime1, 0);
-		alloc_time = (double)(endTime1.tv_sec - startTime1.tv_sec) + ((double)(endTime1.tv_usec - startTime1.tv_usec) / 1000000.);
+	double alloc_time = 0., sort_time = 0., dealloc_time = 0.;
+	struct timeval startTime1;
+	gettimeofday(&startTime1, 0);
+	int *arr = AllocateArray(sizes[i]);
+	struct timeval endTime1;
+	gettimeofday(&endTime1, 0);
+	alloc_time = (double)(endTime1.tv_sec - startTime1.tv_sec) + ((double)(endTime1.tv_usec - startTime1.tv_usec) / 1000000.);
         	
-        struct timeval startTime2;
-		gettimeofday(&startTime2, 0);
-        SortArray(arr, sizes[i]);
-		struct timeval endTime2;
-		gettimeofday(&endTime2, 0);
-		sort_time = (double)(endTime2.tv_sec - startTime2.tv_sec) + ((double)(endTime2.tv_usec - startTime2.tv_usec) / 1000000.);
+	struct timeval startTime2;
+	gettimeofday(&startTime2, 0);
+	SortArray(arr, sizes[i]);
+	struct timeval endTime2;
+	gettimeofday(&endTime2, 0);
+	sort_time = (double)(endTime2.tv_sec - startTime2.tv_sec) + ((double)(endTime2.tv_usec - startTime2.tv_usec) / 1000000.);
 		
-        struct timeval startTime3;
-		gettimeofday(&startTime3, 0);
-        DeallocateArray(arr);
-		struct timeval endTime3;
-		gettimeofday(&endTime3, 0);
-		dealloc_time = (double)(endTime3.tv_sec - startTime3.tv_sec) + ((double)(endTime3.tv_usec - startTime3.tv_usec) / 1000000.);
-        printf("\tTime for allocation is %g, time per element = %g\n", alloc_time, alloc_time/sizes[i]);
-        printf("\tTime for sort_time is %g, time per element = %g\n", sort_time, sort_time/sizes[i]);
-        printf("\tTime for deallocation is %g\n", dealloc_time);
+	struct timeval startTime3;
+	gettimeofday(&startTime3, 0);
+	DeallocateArray(arr);
+	struct timeval endTime3;
+	gettimeofday(&endTime3, 0);
+	dealloc_time = (double)(endTime3.tv_sec - startTime3.tv_sec) + ((double)(endTime3.tv_usec - startTime3.tv_usec) / 1000000.);
+        
+	printf("\tTime for allocation is %g, time per element = %g\n", alloc_time, alloc_time/sizes[i]);
+	printf("\tTime for sort_time is %g, time per element = %g\n", sort_time, sort_time/sizes[i]);
+	printf("\tTime for deallocation is %g\n", dealloc_time);
     }
 }
