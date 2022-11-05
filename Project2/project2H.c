@@ -64,7 +64,8 @@ int main()
 	struct timeval endTime3;
 	gettimeofday(&endTime3, 0);
 	dealloc_time = (double)(endTime3.tv_sec - startTime3.tv_sec) + ((double)(endTime3.tv_usec - startTime3.tv_usec) / 1000000.);
-        
+
+	printf("Timings for array of size %d\n", sizes[i]);        
 	printf("\tTime for allocation is %g, time per element = %g\n", alloc_time, alloc_time/sizes[i]);
 	printf("\tTime for sort_time is %g, time per element = %g\n", sort_time, sort_time/sizes[i]);
 	printf("\tTime for deallocation is %g\n", dealloc_time);
