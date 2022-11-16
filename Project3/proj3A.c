@@ -9,6 +9,17 @@ typedef struct{
 	float values[MAX_SIZE];
 } ArrayDictionary;
 
+int compare(char *str1, char *str2){
+	while(*str1 != '\0' || *str2 != '\0'){
+		if(*str1 != *str2){
+			return 0;
+		}
+		str1++;
+		str2++;
+	}
+	return 1;
+}
+
 void Initialize(ArrayDictionary *ad){
 	for(int i = 0; i < MAX_SIZE; i++){
 		ad->keys[i] = "-1";
@@ -18,7 +29,7 @@ void Initialize(ArrayDictionary *ad){
 
 void Store(ArrayDictionary *ad, char *key, float value){
 	for(int i = 0; i < MAX_SIZE; i++){
-		if(strcmp(ad->keys[i], "-1") == 0){
+		if(compare(ad->keys[i], "-1")){
 			ad->keys[i] = key;
 			ad->values[i] = value;
 			return;
@@ -29,10 +40,10 @@ void Store(ArrayDictionary *ad, char *key, float value){
 
 float Fetch(ArrayDictionary *ad, char *key){
 	for(int i = 0; i < MAX_SIZE; i++){
-		if(strcmp(ad->keys[i], key) == 0){
+		if(compare(ad->keys[i], key)){
 			return ad->values[i];
 		}
-		if(strcmp(ad->keys[i], "-1") == 0){
+		if(compare(ad->keys[i], "-1")){
 			return 0.;
 		}
 	}
