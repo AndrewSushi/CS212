@@ -45,15 +45,15 @@ char *dequeue(Queue *q){
 }
 /* Here is a suggested helper function for checking blood type
    compatibility. */
-int isDonorToRecipient(char *donor, char *recipient)
+int isDonorToRecipient(char donor, char recipient)
 {
-  if (strcmp(donor, "O") == 0 || strcmp(donor, recipient) == 0)
-    return 1;
-  if (strcmp(donor, "A") == 0 && strcmp(recipient, "AB") == 0)
-	return 1;
-  if (strcmp(donor, "B") == 0 && strcmp(recipient, "AB") == 0)
-    return 1;
-  return 0;
+	if ((donor == 'O') || (donor == recipient))
+		return 1;
+	if ((donor == 'A') && (recipient == 'X'))
+		return 1;
+	if ((donor == 'B') && (recipient == 'X'))
+		return 1;
+	return 0;
 }
 
 int getBloodIndex(char bloodType){
@@ -122,52 +122,183 @@ int isValidSurgery(char don, char rec){
 
 }
 
-int findPriority(Queue **rec, Queue **don, char blood, int isDonor){ // Returns the index corresponding to bloodType
-	if(isDonor){
-		if(blood == 'X'){
-			if(rec[0]->population){
-				return 0; // There is an AB donor and Recip
-			}else{
-				return -1; // No AB rec
-			}
-		}else if(blood ==  'B'){
-			if(rec[0]->population){
-				if((rec[1]->population && rec[2]->population && rec[3]->population) == 0){
-					return 0; // Only recip in all queues
-				}
-			}
-			if(rec[1]->population){
-				return 1; // There is a type B;
-			}else{
-				return -1;
-			}
-		}else if(blood == 'A'){	
-			if(rec[0]->population){
-				if((rec[1]->population && rec[2]->population && rec[3]->population) == 0){
-					return 0;
-				}
-			}
-			if(rec[2]->population){
-				return 2; // There is a type A;
-			}else{
-				return -1;
-			}
+
+//int findRecip(Queue **rec, char bloodType){ // Return the index of the recipient blood type that is matched}
+
+/*
+int findPriorityRec(Queue **rec, char bloodDonor){ // Returns the index corresponding to bloodType
+	if(blood == 'X'){
+		if(rec[0]->population){
+			return 0; // There is an AB donor and Recip
 		}else{
-			if(rec[0]->population){
-				if((rec[1]->population && rec[2]->population && rec[3]->population) == 0){
-					return 0;
-				}
+			return -1; // No AB rec
+		}
+	}else if(blood ==  'B'){
+		if(rec[0]->population){
+			if((rec[1]->population && rec[2]->population && rec[3]->population) == 0){
+				return 0; // Only recip in all queues
 			}
-			if(rec[3]->population){
-				return 3; // There is a type A;
-			}else{
-				return -1;
+		}
+		if(rec[1]->population){
+			return 1; // There is a type B;
+		}else{
+			return -1;
+		}
+	}else if(blood == 'A'){	
+		if(rec[0]->population){
+			if((rec[1]->population && rec[2]->population && rec[3]->population) == 0){
+				return 0;
 			}
+		}
+		if(rec[2]->population){
+			return 2; // There is a type A;
+		}else{
+			return -1;
+		}
+	}else{
+		if(rec[0]->population){
+			if((rec[1]->population && rec[2]->population && rec[3]->population) == 0){
+				return 0;
+			}
+		}
+		if(rec[3]->population){
+			return 3; // There is a type A;
+		}else{
+			return -1;
 		}
 	}
 //	for(int i = 0; i < 4; i++){
 //		printQueue(don[i]);
 //	}
+}
+*/
+/*
+int findPriorityDon(Queue **rec, char bloodRecip){ // Returns the index corresponding to bloodType
+	if(blood == 'X'){
+		if(rec[0]->population){
+			return 0; // There is an AB donor and Recip
+		}else{
+			return -1; // No AB rec
+		}
+	}else if(blood ==  'B'){
+		if(rec[0]->population){
+			if((rec[1]->population && rec[2]->population && rec[3]->population) == 0){
+				return 0; // Only recip in all queues
+			}
+		}
+		if(rec[1]->population){
+			return 1; // There is a type B;
+		}else{
+			return -1;
+		}
+	}else if(blood == 'A'){	
+		if(rec[0]->population){
+			if((rec[1]->population && rec[2]->population && rec[3]->population) == 0){
+				return 0;
+			}
+		}
+		if(rec[2]->population){
+			return 2; // There is a type A;
+		}else{
+			return -1;
+		}
+	}else{
+		if(rec[0]->population){
+			if((rec[1]->population && rec[2]->population && rec[3]->population) == 0){
+				return 0;
+			}
+		}
+		if(rec[3]->population){
+			return 3; // There is a type A;
+		}else{
+			return -1;
+		}
+	}
+//	for(int i = 0; i < 4; i++){
+//		printQueue(don[i]);
+//	}
+}
+
+*/
+
+int findPriority(Queue **don, Queue **rec, char bloodType, int isDonor){
+	printf("%c\n", bloodType);
+	switch (bloodType){
+		case 'X':
+			if(isDonor){
+				if(rec[0]->population){
+					return 0;
+				}else{
+					return -1;
+				}
+			}else{
+				for(int i = 0; i < 4; i++){
+					if(don[i]->population){
+						return i;
+					}
+				}
+				return -1;
+			}
+		case 'B':
+			if(isDonor){
+				if(rec[1]->population){
+					return 1;
+				}else if(rec[3]->population){
+					return 3;
+				}else{
+					return -1;
+				}
+			}else{
+				if(don[3]->population){
+					return 3;
+				}else if(don[1]->population){
+					return 1;
+				}else{
+					return -1;
+				}
+			}
+		case 'A':
+			if(isDonor){
+				if(rec[2]->population){
+					return 2;
+				}else if(rec[3]->population){
+					return 3;
+				}else{
+					return -1;
+				}
+			}else{
+				if(don[2]->population){
+					return 2;
+				}else if(don[3]->population){
+					return 3;
+				}else{
+					return -1;
+				}
+			}
+		case 'O':
+			if(isDonor){
+				if(rec[3]->population){
+					return 3;
+				}else{
+					return -1;
+				}
+			}else{
+				if(don[3]->population){
+					return 3;
+				}else{
+					return -1;
+				}
+			}
+	}
+}
+
+int isInQueue(Queue **q){
+	for(int i = 0; i < 4; i++){
+		if(q[i]->population){
+			return 1;
+		}
+	}
+	return 0;
 }
 
 void parseData(char *person, Queue **don, Queue **rec, Queue *sur){
@@ -177,25 +308,28 @@ void parseData(char *person, Queue **don, Queue **rec, Queue *sur){
 		int idx = getBloodIndex(type);
 		if(sur->population == 0){
 			enqueue(name, rec[idx]);
-			currentRecips++;
-		}else if(currentDonors){
-			if
+//			currentRecips++;
+		}else if(isInQueue(don)){
+
+			printf("%d\n", findPriority(don, rec, type, 1));
+			//
 //			printMatch(dequeue(don[idx]), name, dequeue(sur));
 //			
 		}else{
 			enqueue(name, rec[idx]);
-			currentRecips++;
+//			currentRecips++;
 		}
 	}else if(person[0] == 'D'){
 		char type = getBloodType(person);
 		int idx = getBloodIndex(type);
-//		if(sur->population == 0){
+		if(sur->population == 0){
 			enqueue(name, don[idx]);
-//		}else if(don[idx]->population){
+		}else if(isInQueue(rec)){
+			printf("%d\n", findPriority(don, rec, type, 1));
 //			printMatch(name, dequeue(rec[idx]), dequeue(sur));
-//		}else{
-//			enqueue(name, don[idx]);
-//		}
+		}else{
+			enqueue(name, don[idx]);
+		}
 	}else{
 //		int ifSurgery = 0;
 //		for(int i = 0; i < 4; i++){
