@@ -13,9 +13,6 @@
 #define BLOOD_TYPES 4
 #define LINE_LENGTH 80
 
-int currentDonors = 0; // Since there are multiple blood types this keeps track of all
-int currentRecips = 0;
-
 char types[BLOOD_TYPES] = {'X', 'B', 'A', 'O'}; // X represents AB
 
 struct queue
@@ -27,15 +24,19 @@ struct queue
 };
 typedef struct queue Queue;
 
+void printQueue(struct queue *q);
+
 void initializeQueue(Queue *q){
 	q->front = 0;
 	q->back = 0;
+	q->population = 0;
 }
 
 void enqueue(char *str, Queue *q){
 	if(q->back == QUEUE_SIZE - 1){
 		q->strings[q->back] = strdup(str);
 		q->back = 0;
+		free(q->strings[q->back]);
 	}else{
 		q->strings[q->back] = strdup(str);
 		q->back++;
@@ -50,8 +51,7 @@ char *dequeue(Queue *q){
 	return dequeued;
 	
 }
-/* Here is a suggested helper function for checking blood type
-   compatibility. */
+
 int isDonorToRecipient(char donor, char recipient)
 {
 	if ((donor == 'O') || (donor == recipient))
@@ -120,7 +120,6 @@ char *getName(char *person){
 	return person;
 }
 
-void printQueue(struct queue *q);
 
 int isInQueue(Queue **q){
 	for(int i = 0; i < 4; i++){
@@ -221,6 +220,8 @@ void openFile(char *argv, Queue **don, Queue **rec, Queue *sur){
 		parseData(linePtr, don, rec, sur);
 		count = getline(&linePtr, &n, f);
 	}
+	free(linePtr);
+	fclose(f);
 }
 
 void printQueue(struct queue *q)
@@ -261,75 +262,6 @@ void prettyPrintQueue(struct queue *q, char *label, char *type)
 
 int main(int argc, char **argv)
 {
-  /***  STEP #1: Implement your queue code and test it.  ***/
-
-  /* This test code: */
- 
-/* 
-	struct queue *q = malloc(sizeof (struct queue));
-	initializeQueue(q);
-	printQueue(q);
-	enqueue("hello", q);
-	printQueue(q);
-	enqueue("world", q);
-  	printQueue(q);
-	printf("Dequeue: %s\n", dequeue(q));
-	printQueue(q);
-	free(q);
-*/  
-
-
-  /* Gives this output (with different pointers):
-
-Printing queue 0x7fff5e6878a8
-	The index for the front of the queue is 0
-	The index for the back of the queue is 0
-	The queue is empty.
-Printing queue 0x7fff5e6878a8
-	The index for the front of the queue is 0
-	The index for the back of the queue is 1
-		Entry[0] = "hello"
-Printing queue 0x7fff5e6878a8
-	The index for the front of the queue is 0
-	The index for the back of the queue is 2
-		Entry[0] = "hello"
-		Entry[1] = "world"
-Dequeue: hello
-Printing queue 0x7fff5e6878a8
-	The index for the front of the queue is 1
-	The index for the back of the queue is 2
-		Entry[1] = "world"
-  */
-
-  /***
-    STEP #2: Open the input file (argc/argv stuff).
-             You should read the file line-by-line in the next step
-             using fgets (or fscanf or getline).
-             Note: You must not hard-code the input file name.
-             You must not use fread.
-             You should exit with an error if file opening fails.
-  ***/
-  /***
-    STEP #3: After your queue code works and after you can read the
-             file, implement the prompt.
-             Note: Here is the print statement to use for a match:
-
-  printf(
-      "MATCH: %s donates to %s via Dr. %s\n",
-      donor,
-      recipient,
-      surgeon);
-
-    You will need four queues for recipients, and four queus for
-    donors, so using arrays seems sensible. Suggested declarations
-    for these arrays are included below this comment.
-
-  ***/
-
-  /* Here is a suggested helper array for facilitating matching as
-    described in the prompt. The blood types are listed from most
-    rare to least rare. */
-
 	struct queue *donors[BLOOD_TYPES];
 	struct queue *recipients[BLOOD_TYPES];
 	struct queue *surgeons = malloc(sizeof *surgeons);
@@ -341,61 +273,24 @@ Printing queue 0x7fff5e6878a8
 		initializeQueue(donors[i]);
 		initializeQueue(recipients[i]);	
 	}
-//	printf("%s\n", dequeue(surgeons));	
+
 	openFile(argv[1], donors, recipients, surgeons);
-//	printf("%d\n", isInQueue(donors) && isInQueue(recipients), surgeons->population);
 
-//	testSurgeon(donors, recipients, "Mike");
-
-//	printQueue(surgeons);
-//	printQueue(donors[0]);
-//	printQueue(recipients[0]);
-//	printQueue(recipients[1]);
-//	printQueue(recipients[2]);
-//	printQueue(recipients[3]);
-
-//	for(int i = 0; i < 4; i++){
-//		printQueue(donors[i]);
-//		printQueue(recipients[i]);
-//	}
-//	printQueue(surgeons);
-
-//	findPriority(donors);
-
-  /*
-    STEP #4: After your matching code is done, add prettyPrintQueue
-             calls for each of your recipient queues, your donor
-             queues, and your surgeon queue. If you used the
-             suggested "recipients" and "donors" arrays, and the
-             "types" array, then you can use these print statements:
-*/
 	char *types2[BLOOD_TYPES] = {"AB", "B", "A", "O"};
-
 	for (int r = 0; r < BLOOD_TYPES; r++)
 		prettyPrintQueue(recipients[r], "recipients", types2[r]);
 	for (int d = 0; d < BLOOD_TYPES; d++)
 		prettyPrintQueue(donors[d], "donors", types2[d]);
 		prettyPrintQueue(surgeons, "surgeons", "type-agnostic");
 
-/*
-             If you did not use arrays for your recipient and donor
-             queues, then you should print your recipient queues in
-             this order, for example:
-
-
-  prettyPrintQueue(recipients_AB, "recipients", "AB");
-  prettyPrintQueue(recipients_A, "recipients", "B");
-  prettyPrintQueue(recipients_B, "recipients", "A");
-  prettyPrintQueue(recipients_O, "recipients", "O");
-
-             Then, print your donor queues in the same order, then
-             print your surgeon queue.
-  */
-
   /* If you have time, be sure to free any memory you allocated. */
-  free(surgeons);
+	for(int i = 0; i < 4; i++){
+		free(recipients[i]);
+		free(donors[i]);
+	}
+	free(surgeons);
 
-  return EXIT_SUCCESS;
+	return EXIT_SUCCESS;
 }
 
 
