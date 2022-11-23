@@ -336,14 +336,14 @@ int findPriority(Queue **don, Queue **rec, char bloodType, int isDonor){
 	switch (bloodType){
 		case 'X':
 			if(isDonor){
-				if(rec[0]->population != 0){
+				if((rec[0]->population) && (don[0]->population)){
 					return 0;
 				}else{
 					return -1;
 				}
 			}else{
 				for(int i = 1; i < 4; i++){
-					if(don[i]->population != 0){
+					if(don[i]->population && rec[i]->population){
 						return i;
 					}
 				}
@@ -351,7 +351,7 @@ int findPriority(Queue **don, Queue **rec, char bloodType, int isDonor){
 			}
 		case 'B':
 			if(isDonor){
-				if(rec[0]->population != 0){
+				if(rec[0]->population && don[0]->population){
 					return 0;
 				}else if(rec[1]->population != 0){
 					return 1;
@@ -359,7 +359,7 @@ int findPriority(Queue **don, Queue **rec, char bloodType, int isDonor){
 					return -1;
 				}
 			}else{
-				if(don[1]->population != 0){
+				if(don[1]->population && rec[1]->population){
 					return 1;
 				}else if(don[3]->population != 0){
 					return 3;
@@ -369,17 +369,17 @@ int findPriority(Queue **don, Queue **rec, char bloodType, int isDonor){
 			}
 		case 'A':
 			if(isDonor){
-				if(rec[0]->population != 0){
+				if(rec[0]->population && don[0]->population){
 					return 0;
-				}else if(rec[2]->population != 0){
+				}else if(rec[2]->population && don[2]->population){
 					return 2;
 				}else{
 					return -1;
 				}
 			}else{
-				if(don[2]->population != 0){
+				if(don[2]->population && rec[2]->population){
 					return 2;
-				}else if(don[3]->population != 0){
+				}else if(don[3]->population && rec[3]->population){
 					return 3;
 				}else{
 					return -1;
@@ -388,13 +388,13 @@ int findPriority(Queue **don, Queue **rec, char bloodType, int isDonor){
 		case 'O':
 			if(isDonor){
 				for(int i = 0; i < 4; i++){
-					if(rec[i]->population != 0){
+					if(rec[i]->population && don[i]->population){
 						return i;
 					}
 				}
 				return -1;
 			}else{
-				if(don[3]->population != 0){
+				if(don[3]->population && rec[3]->population){
 					return 3;
 				}else{
 					return -1;
@@ -448,7 +448,7 @@ void parseData(char *person, Queue **don, Queue **rec, Queue *sur){
 		if(isInQueue(rec) && isInQueue(don)){
 			for(int i = 0; i < 2; i++){
 				for(int j = 0; j < 4; j++){
-					int idx = findPriority(don, rec, types[j], i);
+					int idx = findPrioritySurgery(don, rec, types[j], i);
 					if(idx != -1){
 						printf("%d %d\n", don_idx, rec_idx);
 						printf("%d\n", don[don_idx]->population);
