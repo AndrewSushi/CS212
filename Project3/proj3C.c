@@ -225,7 +225,7 @@ int findPriorityDon(Queue **rec, char bloodRecip){ // Returns the index correspo
 
 int don_idx = 0;
 int rec_idx = 0;
-int findPriority(Queue **don, Queue **rec, char bloodType, int isDonor){
+int findPrioritySurgery(Queue **don, Queue **rec, char bloodType, int isDonor){
 	switch (bloodType){
 		case 'X':
 			if(isDonor){
@@ -324,6 +324,77 @@ int findPriority(Queue **don, Queue **rec, char bloodType, int isDonor){
 					printf("don[3]: %d\n", don[3]->population);
 					don_idx = 3;
 					rec_idx = 3;
+					return 3;
+				}else{
+					return -1;
+				}
+			}
+	}
+}
+
+int findPriority(Queue **don, Queue **rec, char bloodType, int isDonor){
+	switch (bloodType){
+		case 'X':
+			if(isDonor){
+				if(rec[0]->population != 0){
+					return 0;
+				}else{
+					return -1;
+				}
+			}else{
+				for(int i = 1; i < 4; i++){
+					if(don[i]->population != 0){
+						return i;
+					}
+				}
+				return -1;
+			}
+		case 'B':
+			if(isDonor){
+				if(rec[0]->population != 0){
+					return 0;
+				}else if(rec[1]->population != 0){
+					return 1;
+				}else{
+					return -1;
+				}
+			}else{
+				if(don[1]->population != 0){
+					return 1;
+				}else if(don[3]->population != 0){
+					return 3;
+				}else{
+					return -1;
+				}
+			}
+		case 'A':
+			if(isDonor){
+				if(rec[0]->population != 0){
+					return 0;
+				}else if(rec[2]->population != 0){
+					return 2;
+				}else{
+					return -1;
+				}
+			}else{
+				if(don[2]->population != 0){
+					return 2;
+				}else if(don[3]->population != 0){
+					return 3;
+				}else{
+					return -1;
+				}
+			}
+		case 'O':
+			if(isDonor){
+				for(int i = 0; i < 4; i++){
+					if(rec[i]->population != 0){
+						return i;
+					}
+				}
+				return -1;
+			}else{
+				if(don[3]->population != 0){
 					return 3;
 				}else{
 					return -1;
