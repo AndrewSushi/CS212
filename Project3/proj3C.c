@@ -122,13 +122,6 @@ char *getName(char *person){
 
 void printQueue(struct queue *q);
 
-int isValidSurgery(char don, char rec){
-	if(don == 'O' && don == rec){ // Both O
-		return 1;
-	}
-
-}
-
 int isInQueue(Queue **q){
 	for(int i = 0; i < 4; i++){
 		if(q[i]->population){
@@ -181,8 +174,6 @@ void parseData(char *person, Queue **don, Queue **rec, Queue *sur){
 	if(person[0] == 'R'){
 		char type = getBloodType(person);
 		int idx = getBloodIndex(type);
-//		printf("%s %c\n", name, types[idx]);
-//		printf("Rec: B:%d\n", rec[1]->population);
 		if(sur->population == 0){
 			enqueue(name, rec[idx]);
 		}else if(isInQueue(don)){
@@ -196,8 +187,6 @@ void parseData(char *person, Queue **don, Queue **rec, Queue *sur){
 	}else if(person[0] == 'D'){
 		char type = getBloodType(person);
 		int idx = getBloodIndex(type);
-//		printf("%s %c\n", name, types[idx]);
-//		printf("Rec: B:%d\n", rec[1]->population);
 		if(sur->population == 0){
 			enqueue(name, don[idx]);
 		}else if(isInQueue(rec)){
@@ -229,7 +218,6 @@ void openFile(char *argv, Queue **don, Queue **rec, Queue *sur){
 	size_t n = LINE_LENGTH;
 	ssize_t count = getline(&linePtr, &n, f);
 	while(count != -1){
-//		printf("%s\n", linePtr);
 		parseData(linePtr, don, rec, sur);
 		count = getline(&linePtr, &n, f);
 	}
