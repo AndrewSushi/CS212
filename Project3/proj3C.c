@@ -16,6 +16,8 @@
 int currentDonors = 0; // Since there are multiple blood types this keeps track of all
 int currentRecips = 0;
 
+char types[BLOOD_TYPES] = {'X', 'B', 'A', 'O'}; // X represents AB
+
 struct queue
 {
 	int front;
@@ -221,19 +223,26 @@ int findPriorityDon(Queue **rec, char bloodRecip){ // Returns the index correspo
 
 */
 
+int don_idx = 0;
+int rec_idx = 0;
 int findPriority(Queue **don, Queue **rec, char bloodType, int isDonor){
-	printf("%c\n", bloodType);
 	switch (bloodType){
 		case 'X':
 			if(isDonor){
-				if(rec[0]->population){
+				if(rec[0]->population != 0){
+					printf("rec[0]: %d ANDREW\n", rec[0]->population);
+					don_idx = 0;
+					rec_idx = 0;
 					return 0;
 				}else{
 					return -1;
 				}
 			}else{
-				for(int i = 0; i < 4; i++){
-					if(don[i]->population){
+				for(int i = 1; i < 4; i++){
+					if(don[i]->population != 0){
+						printf("don[%d]: %d\n", i, don[i]->population);
+						rec_idx = 0;
+						don_idx = i;
 						return i;
 					}
 				}
@@ -241,35 +250,59 @@ int findPriority(Queue **don, Queue **rec, char bloodType, int isDonor){
 			}
 		case 'B':
 			if(isDonor){
-				if(rec[1]->population){
+				if(rec[0]->population != 0){
+					printf("rec[0]: %d ANDREW\n", rec[0]->population);
+					don_idx = 1;
+					rec_idx = 0;
+					return 0;
+				}else if(rec[1]->population != 0){
+					printf("rec[1]: %d\n", rec[1]->population);
+					don_idx = 1;
+					rec_idx = 1;
 					return 1;
-				}else if(rec[3]->population){
-					return 3;
 				}else{
 					return -1;
 				}
 			}else{
-				if(don[3]->population){
-					return 3;
-				}else if(don[1]->population){
+				if(don[1]->population != 0){
+					printf("don[1]: %d\n", don[1]->population);
+					don_idx = 1;
+					rec_idx = 1;
 					return 1;
+				}else if(don[3]->population != 0){
+					printf("don[3]: %d\n", don[3]->population);
+					don_idx = 3;
+					rec_idx = 1;
+					return 3;
 				}else{
 					return -1;
 				}
 			}
 		case 'A':
 			if(isDonor){
-				if(rec[2]->population){
+				if(rec[0]->population != 0){
+					printf("rec[0]: %d ANDREW\n", rec[0]->population);
+					don_idx = 2;
+					rec_idx = 0;
+					return 0;
+				}else if(rec[2]->population != 0){
+					printf("rec[2]: %d\n", rec[2]->population);
+					don_idx = 2;
+					rec_idx = 2;
 					return 2;
-				}else if(rec[3]->population){
-					return 3;
 				}else{
 					return -1;
 				}
 			}else{
-				if(don[2]->population){
+				if(don[2]->population != 0){
+					printf("don[2]: %d\n", don[2]->population);
+					don_idx = 2;
+					rec_idx = 2;
 					return 2;
-				}else if(don[3]->population){
+				}else if(don[3]->population != 0){
+					printf("don[3]: %d\n", don[3]->population);
+					don_idx = 3;
+					rec_idx = 2;
 					return 3;
 				}else{
 					return -1;
@@ -277,13 +310,20 @@ int findPriority(Queue **don, Queue **rec, char bloodType, int isDonor){
 			}
 		case 'O':
 			if(isDonor){
-				if(rec[3]->population){
-					return 3;
-				}else{
-					return -1;
+				for(int i = 0; i < 4; i++){
+					if(rec[i]->population != 0){
+						printf("rec[%d]: %d\n", i, rec[i]->population);
+						don_idx = 3;
+						rec_idx = i;
+						return i;
+					}
 				}
+				return -1;
 			}else{
-				if(don[3]->population){
+				if(don[3]->population != 0){
+					printf("don[3]: %d\n", don[3]->population);
+					don_idx = 3;
+					rec_idx = 3;
 					return 3;
 				}else{
 					return -1;
@@ -308,16 +348,15 @@ void parseData(char *person, Queue **don, Queue **rec, Queue *sur){
 		int idx = getBloodIndex(type);
 		if(sur->population == 0){
 			enqueue(name, rec[idx]);
-//			currentRecips++;
 		}else if(isInQueue(don)){
-
-			printf("%d\n", findPriority(don, rec, type, 1));
-			//
-//			printMatch(dequeue(don[idx]), name, dequeue(sur));
-//			
+			int idx2 = findPriority(don, rec, type, 0);
+			if(idx2 == -1){
+				enqueue(name, rec[idx]);
+			}else{
+				printMatch(dequeue(don[idx]), name, dequeue(sur));
+			}
 		}else{
 			enqueue(name, rec[idx]);
-//			currentRecips++;
 		}
 	}else if(person[0] == 'D'){
 		char type = getBloodType(person);
@@ -325,12 +364,31 @@ void parseData(char *person, Queue **don, Queue **rec, Queue *sur){
 		if(sur->population == 0){
 			enqueue(name, don[idx]);
 		}else if(isInQueue(rec)){
-			printf("%d\n", findPriority(don, rec, type, 1));
-//			printMatch(name, dequeue(rec[idx]), dequeue(sur));
+			int idx2 = findPriority(don, rec, type, 1);
+			if(idx2 == -1){
+				enqueue(name, don[idx]);
+			}else{
+				printMatch(name, dequeue(rec[idx]), dequeue(sur));
+			}
 		}else{
 			enqueue(name, don[idx]);
 		}
 	}else{
+		if(isInQueue(rec) && isInQueue(don)){
+			for(int i = 0; i < 2; i++){
+				for(int j = 0; j < 4; j++){
+					int idx = findPriority(don, rec, types[j], i);
+					if(idx != -1){
+						printf("%d %d\n", don_idx, rec_idx);
+						printf("%d\n", don[don_idx]->population);
+						printf("%d\n", rec[rec_idx]->population);
+						printMatch(dequeue(don[don_idx]), dequeue(rec[rec_idx]), name);
+						return;
+					}
+				}
+			}
+			enqueue(name, sur);
+		}else{
 //		int ifSurgery = 0;
 //		for(int i = 0; i < 4; i++){
 //			if(don[i]->population && rec[i]->population){
@@ -344,9 +402,9 @@ void parseData(char *person, Queue **don, Queue **rec, Queue *sur){
 //		if(ifSurgery == 0){
 			enqueue(name, sur);
 //		}
+		}
 	}
 }
-
 
 void openFile(char *argv, Queue **don, Queue **rec, Queue *sur){
 	FILE *f = fopen(argv, "r");
@@ -470,7 +528,6 @@ Printing queue 0x7fff5e6878a8
   /* Here is a suggested helper array for facilitating matching as
     described in the prompt. The blood types are listed from most
     rare to least rare. */
-	char *types[BLOOD_TYPES] = {"AB", "B", "A", "O"}; // X represents AB
 
 	struct queue *donors[BLOOD_TYPES];
 	struct queue *recipients[BLOOD_TYPES];
