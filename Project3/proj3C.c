@@ -19,7 +19,7 @@ struct queue
 {
 	int front;
 	int back;
-	char *strings[LINE_LENGTH];
+	char strings[QUEUE_SIZE][LINE_LENGTH];
 	int population;
 };
 typedef struct queue Queue;
@@ -34,11 +34,10 @@ void initializeQueue(Queue *q){
 
 void enqueue(char *str, Queue *q){
 	if(q->back == QUEUE_SIZE - 1){
-		q->strings[q->back] = strdup(str);
+		strcpy(q->strings[q->back], str);
 		q->back = 0;
-		free(q->strings[q->back]);
 	}else{
-		q->strings[q->back] = strdup(str);
+		strcpy(q->strings[q->back], str);
 		q->back++;
 	}
 	q->population++;
