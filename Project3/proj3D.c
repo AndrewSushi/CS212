@@ -3,7 +3,11 @@
 #include <string.h>
 
 #define STACK_SIZE 10
-int top;
+
+struct stack{
+	int top;
+	float rpnStack[STACK_SIZE];
+};
 
 typedef enum
 {
@@ -13,22 +17,22 @@ typedef enum
    UNSUPPORTED
 } MathOperation;
 
-void initStack(double *s){
-	top = -1;
+void initStack(struct stack *s){
+	s->top = -1;
 }
 
-void push(double num, double *s){
-	top++;
-	s[top] = num;
+void push(double num, struct stack *s){
+	s->top++;
+	s->rpnStack[s->top] = num;
 }
 
-double pop(double *s){
-	double temp = s[top];
-	top--;
+double pop(struct stack *s){
+	double temp = s->rpnStack[s->top];
+	s->top--;
 	return temp;
 }
 
-double doMath(char *op, double *s){
+double doMath(char *op, struct stack *s){
 	double v2 = pop(s); // Top
 	double v1 = pop(s); // Second Top
 	if(strcmp(op, "+") == 0){
@@ -38,13 +42,6 @@ double doMath(char *op, double *s){
 	}else{
 		return v1 * v2;
 	}
-}
-
-void printStack(double *s){
-	for(int i = 0; i < top; i++){
-		printf("%d: %lf\n", i, s[i]);
-	}
-	printf("\n");
 }
 
 MathOperation GetOperation(char *op)
@@ -100,20 +97,20 @@ double StringToDouble(char *str)
 
 int main(int argc, char **argv){
 
-	double *stack = (double *)malloc(sizeof(double) * STACK_SIZE);
-	initStack(stack);
+	struct stack *s = (struct stack *)malloc(sizeof(struct stack));
+	initStack(s);
 
 	for(int i = 1; i < argc; i++){
 		MathOperation op = GetOperation(argv[i]);
 		if(op != UNSUPPORTED){
-			double temp = doMath(argv[i], stack);
-			push(temp, stack);
+			double temp = doMath(argv[i], s);
+			push(temp, s);
 		}else{
 			double temp = StringToDouble(argv[i]);
-			push(temp, stack);
+			push(temp, s);
 		}
 	}
-	printf("The total is %lf\n", stack[0]);
+	printf("The total is %lf\n", s->rpnStack[0]);
 
     return 0;
 }
